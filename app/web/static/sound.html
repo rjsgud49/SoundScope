@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SoundScope — Sound Test</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body data-page="sound">
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">SS</span>
+      <div>
+        <h1>SoundScope</h1>
+        <p class="tag">WASAPI loopback · levels · waveform</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a class="nav-link" href="/">레이더</a>
+      <a class="nav-link" href="/capture">캡처 테스트</a>
+      <a class="nav-link active" href="/sound">사운드 테스트</a>
+    </nav>
+    <div class="conn" id="connState">
+      <span class="dot"></span>
+      <span id="connLabel">connecting…</span>
+    </div>
+  </header>
+
+  <main class="layout layout-sound">
+    <section class="panel controls">
+      <h2>Loopback capture</h2>
+      <label class="field">
+        <span>Device (★ = Windows 기본 출력)</span>
+        <select id="deviceSelect"></select>
+      </label>
+      <p id="activeCapture" class="hint">현재 캡처: —</p>
+      <div class="row">
+        <button id="btnRefresh" type="button" class="ghost">Refresh</button>
+        <button id="btnUseDefault" type="button" class="ghost">기본 출력 사용</button>
+        <button id="btnApply" type="button" class="accent">Apply device</button>
+      </div>
+      <div class="row">
+        <button id="btnStart" type="button" class="ghost">Start</button>
+        <button id="btnStop" type="button" class="ghost">Stop</button>
+        <button id="btnSave" type="button">Save WAV (3s)</button>
+      </div>
+      <p class="hint warn-hint">
+        <strong>중요:</strong> 지금 노래가 나오는 장치와 <em>같은</em> loopback을 골라야 합니다.
+        AirPods로 듣고 있으면 <code>Headphones(AirPods)</code>를 선택 후 <strong>Apply device</strong>를 누르세요.
+        Realtek 스피커를 고르면 스피커로 안 나가는 소리는 전부 무음입니다.
+      </p>
+      <p class="hint">버퍼는 최근 3초입니다. Ctrl+S로도 저장할 수 있습니다.</p>
+      <div id="silenceWarn" class="toast error" hidden>무음 감지: 장치가 실제 출력과 다를 수 있습니다. 기본 출력(★)으로 Apply 해보세요.</div>
+      <div id="stallWarn" class="toast error" hidden>캡처 스톨: WASAPI가 멈췄습니다. 자동 복구 중이거나 Start를 눌러 주세요. (AirPods BT는 자주 끊깁니다)</div>
+      <div id="toast" class="toast" hidden></div>
+    </section>
+
+    <section class="panel meters">
+      <h2>Levels</h2>
+      <div class="meter-grid">
+        <div class="meter">
+          <div class="meter-label"><span>RMS</span><strong id="rmsText">−80.0 dB</strong></div>
+          <div class="bar-track"><div class="bar-fill rms" id="rmsBar"></div></div>
+        </div>
+        <div class="meter">
+          <div class="meter-label"><span>Peak</span><strong id="peakText">−80.0 dB</strong></div>
+          <div class="bar-track"><div class="bar-fill peak" id="peakBar"></div></div>
+        </div>
+      </div>
+      <div class="meta" id="metaLine">—</div>
+      <div class="channels" id="channelMeters"></div>
+    </section>
+
+    <section class="panel wave-panel">
+      <div class="wave-head">
+        <h2>Waveform</h2>
+        <span id="bufferInfo">buffer 0.00 / 3.00 s</span>
+      </div>
+      <canvas id="wave" width="1200" height="280"></canvas>
+    </section>
+  </main>
+
+  <script src="/static/common.js"></script>
+  <script src="/static/sound.js"></script>
+</body>
+</html>

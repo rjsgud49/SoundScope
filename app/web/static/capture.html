@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SoundScope — Capture Test</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body data-page="capture">
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">SS</span>
+      <div>
+        <h1>SoundScope</h1>
+        <p class="tag">Compass ROI · OCR calibration</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a class="nav-link" href="/">레이더</a>
+      <a class="nav-link active" href="/capture">캡처 테스트</a>
+      <a class="nav-link" href="/sound">사운드 테스트</a>
+    </nav>
+    <div class="conn" id="connState">
+      <span class="dot"></span>
+      <span id="connLabel">idle</span>
+    </div>
+  </header>
+
+  <main class="layout layout-capture">
+    <section class="panel controls">
+      <h2>Monitor & ROI</h2>
+      <label class="field">
+        <span>Monitor</span>
+        <select id="monitorSelect"></select>
+      </label>
+      <div class="roi-grid">
+        <label>x <input id="roiX" type="number" /></label>
+        <label>y <input id="roiY" type="number" /></label>
+        <label>w <input id="roiW" type="number" /></label>
+        <label>h <input id="roiH" type="number" /></label>
+      </div>
+      <div class="row">
+        <button id="btnRoiDefault" type="button" class="ghost">Auto ROI</button>
+        <button id="btnRoiSave" type="button">Save ROI</button>
+        <button id="btnTopStrip" type="button" class="ghost">Top strip</button>
+        <button id="btnCompassTest" type="button" class="accent">Test OCR</button>
+      </div>
+      <p class="hint warn-hint">
+        미리보기에 <strong>배그 나침반 중앙 숫자</strong>만 보이게 ROI를 좁히세요 (권장 w≈140~200).
+        지금처럼 가로 1000px면 OCR이 매우 느려집니다. <strong>Auto ROI</strong>로 좁은 영역을 쓰세요.
+      </p>
+
+      <h2 class="sub">Tesseract</h2>
+      <label class="field">
+        <span>tesseract.exe path (optional if on PATH)</span>
+        <input id="tesseractCmd" type="text" placeholder="C:\Program Files\Tesseract-OCR\tesseract.exe" />
+      </label>
+      <div class="row">
+        <button id="btnTesseractSave" type="button" class="ghost">Save path</button>
+      </div>
+
+      <h2 class="sub">Manual heading fallback</h2>
+      <label class="field">
+        <span>Empty = use OCR on gunshot</span>
+        <input id="manualHeading" type="number" min="0" max="359" step="1" placeholder="e.g. 180" />
+      </label>
+      <div class="row">
+        <button id="btnManualApply" type="button" class="ghost">Apply manual</button>
+        <button id="btnManualClear" type="button" class="ghost">Clear manual</button>
+      </div>
+      <p class="hint">배그 상단 나침반 숫자만 들어가도록 ROI를 좁히면 OCR 정확도가 올라갑니다. Tesseract 미설치 시 Manual heading을 사용하세요.</p>
+      <div id="toast" class="toast" hidden></div>
+    </section>
+
+    <section class="panel preview-panel">
+      <div class="wave-head">
+        <h2>ROI Preview</h2>
+        <span id="ocrStatus">대기</span>
+      </div>
+      <div id="compassPreviewWrap" class="preview-wrap large">
+        <img id="compassPreview" alt="compass ROI preview" />
+      </div>
+      <p id="compassTestResult" class="hint">Test OCR을 누르면 미리보기와 인식 결과가 표시됩니다.</p>
+    </section>
+  </main>
+
+  <script src="/static/common.js"></script>
+  <script src="/static/capture.js"></script>
+</body>
+</html>

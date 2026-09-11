@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SoundScope — Radar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body data-page="radar">
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">SS</span>
+      <div>
+        <h1>SoundScope</h1>
+        <p class="tag" id="pageTag">Sound-only direction radar</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a class="nav-link active" href="/">레이더</a>
+      <a class="nav-link" href="/capture">캡처 테스트</a>
+      <a class="nav-link" href="/sound">사운드 테스트</a>
+    </nav>
+    <div class="conn" id="connState">
+      <span class="dot"></span>
+      <span id="connLabel">connecting…</span>
+    </div>
+  </header>
+
+  <main class="layout layout-radar">
+    <section class="panel radar-panel">
+      <div class="wave-head">
+        <h2 id="radarTitle">Sound-only Radar</h2>
+        <span id="radarInfo">waiting</span>
+      </div>
+      <div class="radar-stage" id="radarStage">
+        <canvas id="radar" width="640" height="640"></canvas>
+      </div>
+      <div class="event-log" id="eventLog"></div>
+    </section>
+
+    <section class="panel side-panel">
+      <h2>Mode</h2>
+      <div class="mode-switch" role="group" aria-label="radar mode">
+        <button type="button" class="mode-btn active" id="btnModeSound" data-mode="sound_only">Sound only</button>
+        <button type="button" class="mode-btn" id="btnModeAbsolute" data-mode="absolute">Absolute</button>
+      </div>
+      <p class="hint" id="modeHint">
+        사운드만 테스트: 나침반 OCR 없이 좌/우/전후 상대 방향만 표시합니다. (위=내 앞)
+      </p>
+
+      <h2 class="sub">Quick actions</h2>
+      <div class="row">
+        <button id="btnSimLeft" type="button" class="ghost">Sim LEFT</button>
+        <button id="btnSimRight" type="button" class="accent">Sim RIGHT</button>
+      </div>
+      <div class="row">
+        <button id="btnSimFront" type="button" class="ghost">Sim FRONT</button>
+        <button id="btnSimBack" type="button" class="ghost">Sim BACK</button>
+      </div>
+      <div class="row">
+        <button id="btnSimFL" type="button" class="ghost">Sim FL</button>
+        <button id="btnSimFR" type="button" class="ghost">Sim FR</button>
+      </div>
+
+      <div id="absoluteControls">
+        <label class="field">
+          <span>Manual facing (absolute mode)</span>
+          <input id="manualHeading" type="number" min="0" max="359" step="1" placeholder="e.g. 180" />
+        </label>
+        <div class="row">
+          <button id="btnManualApply" type="button" class="ghost">Apply facing</button>
+          <button id="btnManualClear" type="button" class="ghost">Use OCR</button>
+        </div>
+      </div>
+
+      <h2 class="sub">Detection tune</h2>
+      <label class="field">
+        <span>Rise dB <em id="riseVal">8</em></span>
+        <input id="riseDb" type="range" min="4" max="20" step="0.5" value="8" />
+      </label>
+      <label class="field">
+        <span>Min peak <em id="peakVal">0.03</em></span>
+        <input id="minPeak" type="range" min="0.01" max="0.2" step="0.005" value="0.03" />
+      </label>
+      <label class="field">
+        <span>Cooldown ms <em id="coolVal">350</em></span>
+        <input id="cooldownMs" type="range" min="100" max="1200" step="50" value="350" />
+      </label>
+      <label class="field">
+        <span>Gunshot gate score <em id="gateVal">0.28</em></span>
+        <input id="gateScore" type="range" min="0.05" max="0.7" step="0.01" value="0.28" />
+      </label>
+      <label class="check-row">
+        <input id="spectralGate" type="checkbox" checked />
+        <span>Spectral gate (music/bass reject)</span>
+      </label>
+      <div class="row">
+        <button id="btnDetApply" type="button" class="accent">Apply detection</button>
+      </div>
+      <p class="hint" id="detDebug">gate — · rejected — · dropped —</p>
+
+      <div class="meta" id="metaLine">—</div>
+      <div id="toast" class="toast" hidden></div>
+    </section>
+  </main>
+
+  <script src="/static/common.js"></script>
+  <script src="/static/radar.js"></script>
+</body>
+</html>
