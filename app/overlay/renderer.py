@@ -1,0 +1,1 @@
+"""Placeholder overlay renderer."""
